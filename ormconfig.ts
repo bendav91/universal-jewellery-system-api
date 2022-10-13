@@ -7,10 +7,10 @@ const { DB_NAME, DB_PORT, DB_PASS, DB_USER, DB_SYNC, DB_HOST } = process.env;
 
 export const connectionSource = new DataSource({
   database: DB_NAME,
-  entities: ['src/**/**.entity{.ts,.js}'],
+  entities: ['dist/**/**.entity.js'],
   host: DB_HOST,
   logging: false,
-  migrations: ['src/migrations/**/*{.ts,.js}'],
+  migrations: ['dist/src/migrations/**/*.js'],
   password: DB_PASS,
   port: parseInt(DB_PORT, 10),
   synchronize: DB_SYNC === 'true',

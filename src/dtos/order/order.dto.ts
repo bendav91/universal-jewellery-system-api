@@ -5,7 +5,7 @@ export class OrderDto {
   public orderNumber: string;
 
   @ApiProperty()
-  public notes: string;
+  public notes: string | null;
 
   @ApiProperty()
   public shippingAddress: string;

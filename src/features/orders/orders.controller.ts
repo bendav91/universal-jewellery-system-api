@@ -6,8 +6,8 @@ import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { OrdersService } from './orders.service';
 
-@Controller('orders')
-@ApiTags('Orders')
+@Controller('Orders')
+@ApiTags('order')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 

@@ -15,14 +15,14 @@ export class OrdersService {
 
   async getOrders(pageOptionsDto: PageOptionsDto): Promise<PageDto<Order>> {
     const queryBuilder = this.ordersRepository.createQueryBuilder('order');
-    queryBuilder.leftJoinAndSelect('order.user', 'user');
     queryBuilder
-      .orderBy('order.createdAt', 'DESC')
+      .orderBy('order.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
+
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
     return new PageDto(entities, pageMetaDto);
