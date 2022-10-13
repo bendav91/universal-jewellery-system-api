@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
-import { CreateOrderDto } from 'src/dtos/order/create-order.dto';
-import { OrderDto } from 'src/dtos/order/order.dto';
+import { CreateOrderDto } from 'src/dtos/orders/create-order.dto';
+import { OrderDto } from 'src/dtos/orders/order.dto';
 
 export const ApiCreateOrderResponse = () => {
   return applyDecorators(

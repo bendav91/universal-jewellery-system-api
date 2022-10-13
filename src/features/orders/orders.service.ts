@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateOrderDto } from 'src/dtos/order/create-order.dto';
+import { CreateOrderDto } from 'src/dtos/orders/create-order.dto';
 import { PageMetaDto } from 'src/dtos/page/page-meta.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
