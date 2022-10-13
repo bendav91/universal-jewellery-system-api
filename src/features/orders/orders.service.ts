@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateOrderDto } from 'src/dtos/order/create-order.dto';
 import { PageMetaDto } from 'src/dtos/page/page-meta.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
+import { generateOrderNumber } from 'src/utils/generate-order-number';
 import { Repository } from 'typeorm';
 import { Order } from '../../entities/orders.entity';
 
@@ -26,5 +28,18 @@ export class OrdersService {
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
 
     return new PageDto(entities, pageMetaDto);
+  }
+
+  async createOrder(createOrderDto: CreateOrderDto): Promise<
+    {
+      notes: string;
+      shippingAddress: string;
+      orderNumber: string;
+    } & Order
+  > {
+    return await this.ordersRepository.save({
+      orderNumber: generateOrderNumber(),
+      ...createOrderDto,
+    });
   }
 }

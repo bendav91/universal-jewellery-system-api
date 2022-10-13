@@ -1,6 +1,4 @@
-import { Exclude } from 'class-transformer';
-import { generateOrderNumber } from 'src/utils/generate-order-number';
-import { Entity, Column, BeforeInsert } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 import { AbstractEntity } from './abstract/abstract-entity';
 
 @Entity({
@@ -18,11 +16,5 @@ export class Order extends AbstractEntity {
   @Column({
     nullable: true,
   })
-  public notes: string | null;
-
-  @BeforeInsert()
-  @Exclude()
-  public setOrderNumber() {
-    this.orderNumber = generateOrderNumber();
-  }
+  public notes?: string;
 }
