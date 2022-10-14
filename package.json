@@ -20,11 +20,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d src/config/typeorm.config-migrations.ts",
-    "migration:generate": "yarn run typeorm:cli migration:generate src/database/migrations",
-    "migration:create": "yarn run typeorm:cli migration:create src/database/migrations",
-    "migration:run": "yarn run typeorm:cli migration:run",
-    "migration:revert": "yarn run typeorm:cli migration:revert"
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "migration:generate": "bash ./generate-migration.sh",
+    "migration:create": "bash ./create-migration.sh",
+    "migration:run": "yarn run typeorm:cli -d src/config/typeorm.config-migrations.ts migration:run",
+    "migration:revert": "yarn run typeorm:cli -d src/config/typeorm.config-migrations.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

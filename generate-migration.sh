@@ -1,0 +1,1 @@
+yarn run typeorm:cli -d src/config/typeorm.config-migrations.ts migration:generate src/database/migrations/$1

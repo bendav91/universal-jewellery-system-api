@@ -6,7 +6,7 @@ import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { generateOrderNumber } from 'src/utils/generate-order-number';
 import { Repository } from 'typeorm';
-import { Order } from '../../entities/orders.entity';
+import { Order } from '../../entities/orders/orders.entity';
 
 @Injectable()
 export class OrdersService {

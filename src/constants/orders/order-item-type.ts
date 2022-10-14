@@ -1,0 +1,7 @@
+export enum OrderItemType {
+  BESPOKE = 'BESPOKE',
+  STOCK = 'STOCK',
+  MADE_TO_ORDER = 'MADE_TO_ORDER',
+  SERVICE = 'SERVICE',
+  UNKNOWN = 'UNKNOWN',
+}

@@ -1,11 +1,9 @@
-import { OrderStatus } from '../constants/orders/order-status.enum';
+import { OrderStatus } from '../../constants/orders/order-status.enum';
 import { Entity, Column } from 'typeorm';
-import { AbstractEntity } from './abstract/abstract-entity';
+import { AbstractEntity } from '../abstract/abstract-entity';
 import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
 
-@Entity({
-  name: 'orders',
-})
+@Entity()
 export class Order extends AbstractEntity {
   @Column({
     unique: true,

@@ -7,7 +7,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ApiCreateOrderResponse } from 'src/decorators/swagger/orders/api-create-order-response';
+import { ApiOrderResponse } from 'src/decorators/swagger/orders/api-order-response';
 import { ApiPaginatedResponse } from 'src/decorators/swagger/pagination/api-paginated-response.decorator';
 import { CreateOrderDto } from 'src/dtos/orders/create-order.dto';
 import { OrderDto } from 'src/dtos/orders/order.dto';
@@ -15,7 +15,7 @@ import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { OrdersService } from './orders.service';
 
-@Controller('Orders')
+@Controller('orders')
 @ApiTags('Orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
@@ -31,7 +31,7 @@ export class OrdersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiCreateOrderResponse()
+  @ApiOrderResponse()
   async createOrder(
     @Query() createOrderDto: CreateOrderDto,
   ): Promise<OrderDto> {
