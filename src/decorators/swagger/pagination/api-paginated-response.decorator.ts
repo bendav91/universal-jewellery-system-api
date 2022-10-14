@@ -7,7 +7,6 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(
 ) => {
   return applyDecorators(
     ApiExtraModels(PageDto),
-    ApiExtraModels(model),
     ApiOkResponse({
       description: 'Successfully received model list',
       schema: {

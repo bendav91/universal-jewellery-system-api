@@ -38,20 +38,24 @@ export class OrderItemsService {
   ): Promise<OrderItem> {
     const orderItemNumber = generateOrderItemNumber();
 
-    return await this.orderItemsRepository.save({
-      ...createOrderItemDto,
-      orderItemNumber,
-    });
+    const item = new OrderItem(
+      await this.orderItemsRepository.save({
+        ...createOrderItemDto,
+        orderItemNumber,
+      }),
+    );
+
+    console.log(item);
+
+    return item;
   }
 
-  async deleteOrderItem(orderItemNumber: string): Promise<OrderItem> {
-    const queryBuilder = this.orderItemsRepository.createQueryBuilder();
+  async deleteOrderItem(orderItemNumber: string): Promise<void> {
+    await this.orderItemsRepository.softDelete({ orderItemNumber });
+  }
 
-    await queryBuilder
-      .update(OrderItem)
-      .set({ deletedAt: new Date() })
-      .where('orderItemNumber = :orderItemNumber', { orderItemNumber })
-      .execute();
+  async restoreOrderItem(orderItemNumber: string): Promise<OrderItem> {
+    this.orderItemsRepository.restore({ orderItemNumber });
 
     return await this.orderItemsRepository.findOne({
       where: { orderItemNumber },

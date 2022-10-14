@@ -4,7 +4,7 @@ import { AbstractEntity } from '../abstract/abstract-entity';
 import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
 
 @Entity()
-export class Order extends AbstractEntity {
+export class Order extends AbstractEntity implements Readonly<Order> {
   @Column({
     unique: true,
   })
@@ -33,4 +33,10 @@ export class Order extends AbstractEntity {
     enumName: 'paymentStatusEnum',
   })
   public paymentStatus: PaymentStatus;
+
+  constructor(partial: Partial<Order>) {
+    const { createdAt, updatedAt, deletedAt, id, ...rest } = partial ?? {};
+    super({ createdAt, updatedAt, deletedAt, id });
+    Object.assign(this, rest);
+  }
 }

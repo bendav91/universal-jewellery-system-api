@@ -1,25 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderItemType } from 'src/constants/orders/order-item-type';
-import { OrderStatus } from 'src/constants/orders/order-status.enum';
+import { OrderItem } from 'src/entities/orders/order-item.entity';
 
-export class OrderItemDto {
-  @ApiProperty()
+export class OrderItemDto implements Readonly<OrderItemDto> {
+  public createdAt: Date;
+  public deletedAt?: Date;
   public orderItemNumber: string;
-
   @ApiProperty({
-    enum: OrderStatus,
+    enum: OrderItemType,
     default: OrderItemType.UNKNOWN,
   })
   public status: OrderItemType;
-
-  @ApiProperty({
-    nullable: true,
-  })
-  public deletedAt: Date | null;
-
-  @ApiProperty()
   public updatedAt: Date;
 
-  @ApiProperty()
-  public createdAt: Date;
+  constructor(partial: Partial<OrderItem>) {
+    Object.assign(this, partial);
+  }
 }

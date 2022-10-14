@@ -3,11 +3,11 @@ import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 import { SortOrder } from 'src/constants/page/sort-order.enum';
 
-export class PageOptionsDto {
+export class PageOptionsDto implements Readonly<PageOptionsDto> {
   @ApiPropertyOptional({ enum: SortOrder, default: SortOrder.ASC })
   @IsEnum(SortOrder)
   @IsOptional()
-  readonly order?: SortOrder = SortOrder.ASC;
+  public order?: SortOrder = SortOrder.ASC;
 
   @ApiPropertyOptional({
     minimum: 1,
@@ -17,7 +17,7 @@ export class PageOptionsDto {
   @IsInt()
   @Min(1)
   @IsOptional()
-  readonly page?: number = 1;
+  public page?: number = 1;
 
   @ApiPropertyOptional({
     minimum: 1,
@@ -29,7 +29,7 @@ export class PageOptionsDto {
   @Min(1)
   @Max(50)
   @IsOptional()
-  readonly take?: number = 10;
+  public take?: number = 10;
 
   get skip(): number {
     return (this.page - 1) * this.take;

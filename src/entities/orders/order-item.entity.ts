@@ -3,7 +3,7 @@ import { Entity, Column } from 'typeorm';
 import { AbstractEntity } from '../abstract/abstract-entity';
 
 @Entity()
-export class OrderItem extends AbstractEntity {
+export class OrderItem extends AbstractEntity implements Readonly<OrderItem> {
   @Column({
     unique: true,
   })
@@ -17,9 +17,9 @@ export class OrderItem extends AbstractEntity {
   })
   public status: OrderItemType;
 
-  @Column({
-    nullable: true,
-    type: 'timestamptz',
-  })
-  public deletedAt: Date | null;
+  constructor(partial: Partial<OrderItem>) {
+    const { createdAt, updatedAt, deletedAt, id, ...rest } = partial ?? {};
+    super({ createdAt, updatedAt, deletedAt, id });
+    Object.assign(this, rest);
+  }
 }
