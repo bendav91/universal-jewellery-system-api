@@ -32,6 +32,6 @@ export const typeOrmConfig: DataSourceOptions = {
   port: parseInt(process.env.DB_PORT, 10),
   username: process.env.DB_USER,
   logging: process.env.DB_LOG === 'true',
-  entities: [`${__dirname}/../dist/**/*.entity.js`],
-  migrations: [`dist/database/migrations/*.js`],
+  entities: [`${__dirname}/../../dist/entities/**/*.entity.js`],
+  migrations: [`${__dirname}/../../dist/database/migrations/*.js`],
 };

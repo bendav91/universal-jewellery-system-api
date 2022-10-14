@@ -1,7 +1,8 @@
 import { OrderStatus } from '../../constants/orders/order-status.enum';
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { AbstractEntity } from '../abstract/abstract-entity';
 import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
+import { OrderItem } from './order-item.entity';
 
 @Entity()
 export class Order extends AbstractEntity implements Readonly<Order> {
@@ -33,6 +34,9 @@ export class Order extends AbstractEntity implements Readonly<Order> {
     enumName: 'paymentStatusEnum',
   })
   public paymentStatus: PaymentStatus;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  orderItems: OrderItem[];
 
   constructor(partial: Partial<Order>) {
     const { createdAt, updatedAt, deletedAt, id, ...rest } = partial ?? {};
