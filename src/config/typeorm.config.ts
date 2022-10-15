@@ -18,8 +18,8 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
       synchronize: process.env.DB_SYNC === 'true',
       username: process.env.DB_USER,
       logging: process.env.DB_LOG === 'true',
-      entities: [`${__dirname}/../**/*.entity{.ts,.js}`],
-      migrations: [`${__dirname}/../database/migrations/*{.ts,.js}`],
+      entities: [`${__dirname}/../src/**/*.entity{.ts, .js}`],
+      migrations: [`${__dirname}/../src/database/migrations/*{.ts, .js}`],
     };
   },
 };
@@ -31,7 +31,8 @@ export const typeOrmConfig: DataSourceOptions = {
   password: process.env.DB_PASS,
   port: parseInt(process.env.DB_PORT, 10),
   username: process.env.DB_USER,
+  synchronize: process.env.DB_SYNC === 'true',
   logging: process.env.DB_LOG === 'true',
-  entities: [`${__dirname}/../../dist/entities/**/*.entity.js`],
-  migrations: [`${__dirname}/../../dist/database/migrations/*.js`],
+  entities: [`${__dirname}/../../dist/**/*.entity.js`],
+  migrations: [`${__dirname}/../../dist/database/migrations/**/*.js`],
 };
