@@ -19,6 +19,7 @@ export class OrderDto implements Readonly<OrderDto> {
   public shippingAddress: string;
   public updatedAt: Date;
   public createdAt: Date;
+  public deletedAt: Date;
 
   constructor(partial: Partial<Order>) {
     Object.assign(this, partial);

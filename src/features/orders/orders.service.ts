@@ -18,28 +18,28 @@ export class OrdersService {
   async getOrders(pageOptionsDto: PageOptionsDto): Promise<PageDto<Order>> {
     const queryBuilder = this.ordersRepository.createQueryBuilder('order');
     queryBuilder
-      .orderBy('order.createdAt', pageOptionsDto.order)
+      .orderBy('order.createdAt', pageOptionsDto.sortOrder)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
-
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
-
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createOrder(createOrderDto: CreateOrderDto): Promise<
-    {
-      notes: string;
-      shippingAddress: string;
-      orderNumber: string;
-    } & Order
-  > {
-    return await this.ordersRepository.save({
-      orderNumber: generateOrderNumber(),
-      ...createOrderDto,
+  async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
+    return new Order(
+      await this.ordersRepository.save({
+        orderNumber: generateOrderNumber(),
+        ...createOrderDto,
+      }),
+    );
+  }
+
+  async getOrderByOrderNumber(orderNumber: string): Promise<Order> {
+    return await this.ordersRepository.findOne({
+      where: { orderNumber },
     });
   }
 }

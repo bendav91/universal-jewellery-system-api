@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -30,9 +31,7 @@ export class OrdersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createOrder(
-    @Query() createOrderDto: CreateOrderDto,
-  ): Promise<OrderDto> {
+  async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<OrderDto> {
     return await this.ordersService.createOrder(createOrderDto);
   }
 }

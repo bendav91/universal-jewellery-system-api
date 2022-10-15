@@ -7,7 +7,7 @@ export class PageOptionsDto implements Readonly<PageOptionsDto> {
   @ApiPropertyOptional({ enum: SortOrder, default: SortOrder.ASC })
   @IsEnum(SortOrder)
   @IsOptional()
-  public order?: SortOrder = SortOrder.ASC;
+  public sortOrder?: SortOrder = SortOrder.ASC;
 
   @ApiPropertyOptional({
     minimum: 1,

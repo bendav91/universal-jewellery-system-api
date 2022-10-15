@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { OrderItemType } from 'src/constants/orders/order-item-type';
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { AbstractEntity } from '../abstract/abstract-entity';
@@ -19,6 +20,7 @@ export class OrderItem extends AbstractEntity implements Readonly<OrderItem> {
   public status: OrderItemType;
 
   @ManyToOne(() => Order, (order) => order.orderItems)
+  @Exclude()
   order: Order;
 
   constructor(partial: Partial<OrderItem>) {

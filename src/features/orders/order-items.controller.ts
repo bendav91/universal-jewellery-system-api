@@ -1,11 +1,15 @@
+import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,11 +19,15 @@ import { OrderItemDto } from 'src/dtos/orders/order-item.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { OrderItemsService } from './order-items.service';
+import { OrdersService } from './orders.service';
 
 @Controller('order-items')
 @ApiTags('Order Items')
 export class OrderItemsController {
-  constructor(private readonly orderItemService: OrderItemsService) {}
+  constructor(
+    private readonly orderItemService: OrderItemsService,
+    private readonly ordersService: OrdersService,
+  ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -32,10 +40,20 @@ export class OrderItemsController {
 
   @Post()
   @HttpCode(HttpStatus.ACCEPTED)
+  @ApiException(() => [new NotFoundException('Order not found')])
   async createOrderItem(
-    @Query() createOrderItemDto: CreateOrderItemDto,
+    @Body() createOrderItemDto: CreateOrderItemDto,
   ): Promise<OrderItemDto> {
-    return await this.orderItemService.createOrderItem(createOrderItemDto);
+    const order = await this.ordersService.getOrderByOrderNumber(
+      createOrderItemDto.orderNumber,
+    );
+
+    if (!order) throw new NotFoundException(`Order not found`);
+
+    return await this.orderItemService.createOrderItem(
+      createOrderItemDto,
+      order,
+    );
   }
 
   @Delete('/:orderItemNumber')
@@ -44,5 +62,13 @@ export class OrderItemsController {
     @Param('orderItemNumber') orderItemNumber: string,
   ): Promise<void> {
     await this.orderItemService.deleteOrderItem(orderItemNumber);
+  }
+
+  @Put('restore/:orderItemNumber')
+  @HttpCode(HttpStatus.OK)
+  async restoreOrderItem(
+    @Param('orderItemNumber') orderItemNumber: string,
+  ): Promise<OrderItemDto> {
+    return await this.orderItemService.restoreOrderItem(orderItemNumber);
   }
 }
