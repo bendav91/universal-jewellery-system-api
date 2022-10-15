@@ -75,16 +75,14 @@ export class OrderItemsService {
     const queryBuilder =
       this.orderItemsRepository.createQueryBuilder('orderItem');
 
+    await queryBuilder.restore().where({ orderItemNumber }).execute();
+
     queryBuilder
       .where('orderItem.orderItemNumber = :orderItemNumber', {
         orderItemNumber,
       })
       .leftJoinAndSelect('orderItem.order', 'order')
-      .take(1)
-      .update({
-        deletedAt: null,
-      })
-      .execute();
+      .take(1);
 
     const { entities } = await queryBuilder.getRawAndEntities();
 
