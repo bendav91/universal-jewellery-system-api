@@ -24,9 +24,9 @@ import { PermissionsGuard } from 'src/authorisation/permissions.guard';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Get()
   @Permissions('read:orders')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @HttpCode(HttpStatus.OK)
   @ApiPaginatedResponse(OrderDto)
   @ApiOAuth2(['read:orders'], 'Auth0')

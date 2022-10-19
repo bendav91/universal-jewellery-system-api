@@ -18,8 +18,9 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
       synchronize: process.env.DB_SYNC === 'true',
       username: process.env.DB_USER,
       logging: process.env.DB_LOG === 'true',
+      autoLoadEntities: true,
       entities: [`${__dirname}/../src/**/*.entity{.ts, .js}`],
-      migrations: [`${__dirname}/../src/database/migrations/*{.ts, .js}`],
+      migrations: [`${__dirname}/../../database/migrations/*{.ts, .js}`],
     };
   },
 };

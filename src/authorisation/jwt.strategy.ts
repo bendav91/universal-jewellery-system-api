@@ -14,11 +14,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri: `${process.env.AUTH0_ISSUER_URL}.well-known/jwks.json`,
+        jwksUri: process.env.AUTH0_JWKS_URL,
       }),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       audience: process.env.AUTH0_AUDIENCE,
-      issuer: `${process.env.AUTH0_ISSUER_URL}`,
+      issuer: process.env.AUTH0_ISSUER_URL,
       algorithms: ['RS256'],
     });
   }
