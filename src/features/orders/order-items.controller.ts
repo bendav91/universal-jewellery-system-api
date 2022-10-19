@@ -11,7 +11,9 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiPaginatedResponse } from 'src/decorators/swagger/pagination/api-paginated-response.decorator';
 import { CreateOrderItemDto } from 'src/dtos/orders/create-order-item.dto';
@@ -32,6 +34,7 @@ export class OrderItemsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiPaginatedResponse(OrderItemDto)
+  @UseGuards(AuthGuard('jwt'))
   async getOrderItems(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<OrderItemDto>> {
@@ -41,6 +44,7 @@ export class OrderItemsController {
   @Post()
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiException(() => [new NotFoundException('Order not found')])
+  @UseGuards(AuthGuard('jwt'))
   async createOrderItem(
     @Body() createOrderItemDto: CreateOrderItemDto,
   ): Promise<OrderItemDto> {
@@ -58,6 +62,7 @@ export class OrderItemsController {
 
   @Delete('/:orderItemNumber')
   @HttpCode(HttpStatus.ACCEPTED)
+  @UseGuards(AuthGuard('jwt'))
   async deleteOrderItem(
     @Param('orderItemNumber') orderItemNumber: string,
   ): Promise<void> {
@@ -66,6 +71,7 @@ export class OrderItemsController {
 
   @Put('restore/:orderItemNumber')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'))
   async restoreOrderItem(
     @Param('orderItemNumber') orderItemNumber: string,
   ): Promise<OrderItemDto> {

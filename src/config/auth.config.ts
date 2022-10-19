@@ -1,0 +1,10 @@
+export default () => ({
+  AUTH0_ISSUER_URL: process.env.AUTH0_ISSUER_URL,
+  AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
+  AUTH0_AUTH_URL: process.env.AUTH0_AUTH_URL,
+  AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+  AUTH0_TOKEN_URL: process.env.TOKEN_URL,
+  AUTH0_OPEN_ID_URL: process.env.AUTH0_OPEN_ID_URL,
+  AUTH0_REFRESH_URL: process.env.AUTH0_REFRESH_URL,
+  AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
+});

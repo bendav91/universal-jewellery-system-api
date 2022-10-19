@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { OrdersModule } from './features/orders/orders.module';
 import { ConfigModule } from '@nestjs/config';
 import { typeOrmAsyncConfig } from './config/typeorm.config';
+import { AuthorisationModule } from './authorisation/authorisation.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -11,6 +12,7 @@ import { typeOrmAsyncConfig } from './config/typeorm.config';
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     OrdersModule,
+    AuthorisationModule,
   ],
   controllers: [],
   providers: [],
