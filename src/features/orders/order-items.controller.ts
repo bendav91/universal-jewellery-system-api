@@ -14,7 +14,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOAuth2, ApiTags } from '@nestjs/swagger';
+import { PermissionsGuard } from 'src/authorisation/permissions.guard';
 import { ApiPaginatedResponse } from 'src/decorators/swagger/pagination/api-paginated-response.decorator';
 import { CreateOrderItemDto } from 'src/dtos/orders/create-order-item.dto';
 import { OrderItemDto } from 'src/dtos/orders/order-item.dto';
@@ -22,6 +23,8 @@ import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { OrderItemsService } from './order-items.service';
 import { OrdersService } from './orders.service';
+import { Permissions } from 'src/authorisation/permissions.decorator';
+import { OrderItemPermissions } from 'src/authorisation/permissions.enum';
 
 @Controller('order-items')
 @ApiTags('Order Items')
@@ -32,6 +35,9 @@ export class OrderItemsController {
   ) {}
 
   @Get()
+  @Permissions(OrderItemPermissions.Read)
+  @ApiOAuth2([OrderItemPermissions.Read], 'Auth0')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @HttpCode(HttpStatus.OK)
   @ApiPaginatedResponse(OrderItemDto)
   @UseGuards(AuthGuard('jwt'))
@@ -42,6 +48,9 @@ export class OrderItemsController {
   }
 
   @Post()
+  @Permissions(OrderItemPermissions.Create)
+  @ApiOAuth2([OrderItemPermissions.Create], 'Auth0')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiException(() => [new NotFoundException('Order not found')])
   @UseGuards(AuthGuard('jwt'))
@@ -61,6 +70,9 @@ export class OrderItemsController {
   }
 
   @Delete('/:orderItemNumber')
+  @Permissions(OrderItemPermissions.Delete)
+  @ApiOAuth2([OrderItemPermissions.Delete], 'Auth0')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @HttpCode(HttpStatus.ACCEPTED)
   @UseGuards(AuthGuard('jwt'))
   async deleteOrderItem(
@@ -70,6 +82,9 @@ export class OrderItemsController {
   }
 
   @Put('restore/:orderItemNumber')
+  @Permissions(OrderItemPermissions.Update)
+  @ApiOAuth2([OrderItemPermissions.Update], 'Auth0')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   async restoreOrderItem(

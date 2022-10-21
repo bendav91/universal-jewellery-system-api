@@ -18,6 +18,7 @@ import { PageDto } from 'src/dtos/page/page.dto';
 import { Permissions } from 'src/authorisation/permissions.decorator';
 import { OrdersService } from './orders.service';
 import { PermissionsGuard } from 'src/authorisation/permissions.guard';
+import { OrderPermissions } from 'src/authorisation/permissions.enum';
 
 @Controller('orders')
 @ApiTags('Orders')
@@ -25,11 +26,11 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get()
-  @Permissions('read:orders')
+  @Permissions(OrderPermissions.Read)
+  @ApiOAuth2([OrderPermissions.Read], 'Auth0')
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @HttpCode(HttpStatus.OK)
   @ApiPaginatedResponse(OrderDto)
-  @ApiOAuth2(['read:orders'], 'Auth0')
   async getOrders(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<OrderDto>> {
@@ -37,10 +38,10 @@ export class OrdersController {
   }
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOAuth2(['create:orders'], 'Auth0')
+  @Permissions(OrderPermissions.Create)
+  @ApiOAuth2([OrderPermissions.Create], 'Auth0')
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('create:orders')
+  @HttpCode(HttpStatus.CREATED)
   async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<OrderDto> {
     return await this.ordersService.createOrder(createOrderDto);
   }
