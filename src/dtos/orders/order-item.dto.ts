@@ -12,6 +12,12 @@ export class OrderItemDto implements Readonly<OrderItemDto> {
   public status: OrderItemType;
   public updatedAt: Date;
   public orderNumber: string;
+  public prices: {
+    gross: number;
+    net: number;
+    discount: number;
+    total: number;
+  };
 
   constructor(partial: Partial<OrderItemDto>) {
     Object.assign(this, partial);

@@ -32,6 +32,9 @@ export class OrderItemsService {
     const { entities } = await queryBuilder.getRawAndEntities();
 
     const orderItemDtos = entities.map((entity) => {
+      const { grossPrice, netPrice, discountAmount } = entity;
+      const total = grossPrice + netPrice + discountAmount;
+
       return new OrderItemDto({
         createdAt: entity.createdAt,
         updatedAt: entity.updatedAt,
@@ -39,6 +42,12 @@ export class OrderItemsService {
         orderItemNumber: entity.orderItemNumber,
         orderNumber: entity.order.orderNumber,
         status: entity.status,
+        prices: {
+          gross: entity.grossPrice,
+          net: entity.netPrice,
+          discount: entity.discountAmount,
+          total,
+        },
       });
     });
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });

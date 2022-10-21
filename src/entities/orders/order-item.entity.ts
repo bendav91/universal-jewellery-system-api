@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { OrderItemType } from 'src/constants/orders/order-item-type';
+import { ColumnDecimalTransformer } from 'src/transformers/columnDecimalTransformer.transformer';
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { AbstractEntity } from '../abstract/abstract-entity';
 import { Order } from './orders.entity';
@@ -18,6 +19,33 @@ export class OrderItem extends AbstractEntity implements Readonly<OrderItem> {
     enumName: 'orderItemTypeEnum',
   })
   public status: OrderItemType;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0.0,
+    transformer: new ColumnDecimalTransformer(),
+  })
+  public grossPrice: number;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0.0,
+    transformer: new ColumnDecimalTransformer(),
+  })
+  public discountAmount: number;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0.0,
+    transformer: new ColumnDecimalTransformer(),
+  })
+  public netPrice: number;
 
   @ManyToOne(() => Order, (order) => order.orderItems)
   @Exclude()
