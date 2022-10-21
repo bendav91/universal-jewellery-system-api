@@ -39,15 +39,6 @@ export class OrderItem extends AbstractEntity implements Readonly<OrderItem> {
   })
   public discountAmount: number;
 
-  @Column({
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-    default: 0.0,
-    transformer: new ColumnDecimalTransformer(),
-  })
-  public netPrice: number;
-
   @ManyToMany(() => Tax)
   @JoinTable()
   taxes: Tax[];
