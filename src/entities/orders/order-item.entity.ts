@@ -1,8 +1,9 @@
 import { Exclude } from 'class-transformer';
 import { OrderItemType } from 'src/constants/orders/order-item-type';
 import { ColumnDecimalTransformer } from 'src/transformers/columnDecimalTransformer.transformer';
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
 import { AbstractEntity } from '../abstract/abstract-entity';
+import { Tax } from '../taxes/tax.entity';
 import { Order } from './orders.entity';
 
 @Entity()
@@ -46,6 +47,10 @@ export class OrderItem extends AbstractEntity implements Readonly<OrderItem> {
     transformer: new ColumnDecimalTransformer(),
   })
   public netPrice: number;
+
+  @ManyToMany(() => Tax)
+  @JoinTable()
+  taxes: Tax[];
 
   @ManyToOne(() => Order, (order) => order.orderItems)
   @Exclude()

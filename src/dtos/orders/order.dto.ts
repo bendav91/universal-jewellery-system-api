@@ -16,11 +16,17 @@ export class OrderDto implements Readonly<OrderDto> {
   })
   public paymentStatus: PaymentStatus;
   public orderNumber: string;
-  public notes?: string;
+  @ApiProperty({
+    nullable: true,
+  })
+  public notes: string | null;
   public shippingAddress: string;
   public updatedAt: Date;
   public createdAt: Date;
-  public deletedAt: Date;
+  @ApiProperty({
+    nullable: true,
+  })
+  public deletedAt: Date | null;
   public orderItems: OrderItemDto[];
 
   constructor(partial: Partial<Order>) {
