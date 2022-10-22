@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { typeOrmAsyncConfig } from './config/typeorm.config';
 import { AuthorisationModule } from './authorisation/authorisation.module';
 import { WebhookModule } from './features/webhook/webhook.module';
+import { UsersModule } from './features/users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,6 +16,7 @@ import { WebhookModule } from './features/webhook/webhook.module';
     OrdersModule,
     AuthorisationModule,
     WebhookModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
