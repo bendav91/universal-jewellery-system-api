@@ -9,8 +9,9 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { Auth0User } from 'src/interfaces/auth0-user.interface';
+import { mockAuth0User } from 'src/mocks/mock-auth0-user.mock';
 import { UsersService } from '../users/users.service';
 import { WebhookService } from './webhook.service';
 
@@ -31,6 +32,11 @@ export class WebhookController {
     allowEmptyValue: false,
     schema: {
       default: process.env.WEBHOOK_API_KEY,
+    },
+  })
+  @ApiBody({
+    schema: {
+      default: { user: mockAuth0User },
     },
   })
   async authSync(
