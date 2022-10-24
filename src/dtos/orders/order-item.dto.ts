@@ -1,20 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderItemType } from 'src/constants/orders/order-item-type';
+import { AbstractDto } from '../abstract/abstract.dto';
 import { TaxDto } from '../taxes/tax.dto';
 
-export class OrderItemDto implements Readonly<OrderItemDto> {
-  public createdAt: Date;
+export class OrderItemDto
+  extends AbstractDto
+  implements Readonly<OrderItemDto>
+{
   @ApiProperty({
     nullable: true,
   })
-  public deletedAt: Date | null;
   public orderItemNumber: string;
   @ApiProperty({
     enum: OrderItemType,
     default: OrderItemType.UNKNOWN,
   })
   public status: OrderItemType;
-  public updatedAt: Date;
   public orderNumber: string;
   public prices: {
     gross: number;
@@ -24,7 +25,13 @@ export class OrderItemDto implements Readonly<OrderItemDto> {
 
   public taxes: TaxDto[];
 
-  constructor(partial: Partial<OrderItemDto>) {
-    Object.assign(this, partial);
+  constructor({
+    createdAt,
+    updatedAt,
+    deletedAt,
+    ...rest
+  }: Partial<OrderItemDto>) {
+    super({ createdAt, updatedAt, deletedAt });
+    Object.assign(this, rest);
   }
 }

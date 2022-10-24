@@ -1,17 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { AbstractDto } from '../abstract/abstract.dto';
 
-export class TaxDto implements Readonly<TaxDto> {
+export class TaxDto extends AbstractDto implements Readonly<TaxDto> {
   public name: string;
   public rate: number;
   public description: string;
-  public createdAt: Date;
-  @ApiProperty({
-    nullable: true,
-  })
-  public deletedAt: Date | null;
-  public updatedAt: Date;
 
-  constructor(partial: Partial<TaxDto>) {
-    Object.assign(this, partial);
+  constructor({ createdAt, updatedAt, deletedAt, ...rest }: Partial<TaxDto>) {
+    super({ createdAt, updatedAt, deletedAt });
+    Object.assign(this, rest);
   }
 }

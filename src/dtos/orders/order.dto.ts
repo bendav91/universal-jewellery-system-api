@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderStatus } from 'src/constants/orders/order-status.enum';
 import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
-import { Order } from 'src/entities/orders/orders.entity';
+import { Prices } from 'src/interfaces/prices.interface';
+import { AbstractDto } from '../abstract/abstract.dto';
 import { OrderItemDto } from './order-item.dto';
 
-export class OrderDto implements Readonly<OrderDto> {
+export class OrderDto
+  extends AbstractDto
+  implements Readonly<OrderDto>, Prices
+{
   @ApiProperty({
     enum: OrderStatus,
     default: OrderStatus.NEW,
@@ -21,15 +25,16 @@ export class OrderDto implements Readonly<OrderDto> {
   })
   public notes: string | null;
   public shippingAddress: string;
-  public updatedAt: Date;
-  public createdAt: Date;
-  @ApiProperty({
-    nullable: true,
-  })
-  public deletedAt: Date | null;
   public orderItems: OrderItemDto[];
 
-  constructor(partial: Partial<Order>) {
-    Object.assign(this, partial);
+  public prices: {
+    gross: number;
+    net: number;
+    discount: number;
+  };
+
+  constructor({ createdAt, deletedAt, updatedAt, ...rest }: Partial<OrderDto>) {
+    super({ createdAt, deletedAt, updatedAt });
+    Object.assign(this, rest);
   }
 }

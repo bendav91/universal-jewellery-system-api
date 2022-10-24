@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserType } from 'src/constants/users/user-type.enum';
 import { User } from 'src/entities/users/user.entity';
 import { Auth0User } from 'src/interfaces/auth0-user.interface';
-import { determineUserType } from 'src/utils/determine-user-type';
+import { determineUserType } from 'src/utils/users/determine-user-type';
 import { Repository } from 'typeorm';
 
 @Injectable()

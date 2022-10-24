@@ -1,3 +1,3 @@
 export default () => ({
-  webhookApiKey: process.env.WEBHOOK_API_KEY,
+  WEBHOOK_API_KEY: process.env.WEBHOOK_API_KEY,
 });

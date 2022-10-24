@@ -5,7 +5,8 @@ import { OrderDto } from 'src/dtos/orders/order.dto';
 import { PageMetaDto } from 'src/dtos/page/page-meta.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
-import { generateOrderNumber } from 'src/utils/generate-order-number';
+import { generateOrderNumber } from 'src/utils/orders/generate-order-number';
+import { resolveOrderDtos } from 'src/utils/orders/resolve-order-dtos';
 import { Repository } from 'typeorm';
 import { Order } from '../../entities/orders/orders.entity';
 
@@ -21,22 +22,14 @@ export class OrdersService {
     queryBuilder
       .orderBy('order.createdAt', pageOptionsDto.sortOrder)
       .leftJoinAndSelect('order.orderItems', 'orderItem')
+      .leftJoinAndSelect('orderItem.taxes', 'taxes')
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
 
-    const orderDtos = entities.map((entity) => {
-      return new OrderDto({
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-        deletedAt: entity.deletedAt,
-        orderNumber: entity.orderNumber,
-        orderItems: entity.orderItems,
-        status: entity.status,
-      });
-    });
+    const orderDtos = resolveOrderDtos(entities);
 
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
     return new PageDto(orderDtos, pageMetaDto);
@@ -53,8 +46,8 @@ export class OrdersService {
       updatedAt: newOrder.updatedAt,
       deletedAt: newOrder.deletedAt,
       orderNumber: newOrder.orderNumber,
-      orderItems: newOrder.orderItems,
       status: newOrder.status,
+      orderItems: [],
     });
   }
 

@@ -5,12 +5,11 @@ import { OrderItemDto } from 'src/dtos/orders/order-item.dto';
 import { PageMetaDto } from 'src/dtos/page/page-meta.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
-import { TaxDto } from 'src/dtos/taxes/tax.dto';
 import { OrderItem } from 'src/entities/orders/order-item.entity';
 import { Order } from 'src/entities/orders/orders.entity';
-import { generateOrderItemNumber } from 'src/utils/generate-order-item-number';
-import { round } from 'src/utils/round';
+import { generateOrderItemNumber } from 'src/utils/orders/generate-order-item-number';
 import { Repository } from 'typeorm';
+import { resolveOrderItemDtos } from 'src/utils/orders/resolve-order-item-dtos';
 
 @Injectable()
 export class OrderItemsService {
@@ -34,43 +33,7 @@ export class OrderItemsService {
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
 
-    const orderItemDtos = entities.map((entity) => {
-      const { grossPrice, discountAmount, taxes } = entity;
-
-      let taxMultiplier = 1;
-
-      const taxDtos: TaxDto[] = taxes.map((tax) => {
-        taxMultiplier += tax.rate;
-
-        return new TaxDto({
-          createdAt: tax.createdAt,
-          updatedAt: tax.updatedAt,
-          deletedAt: tax.deletedAt,
-          rate: tax.rate,
-          name: tax.name,
-          description: tax.description,
-        });
-      });
-
-      const gross = round(grossPrice, 2);
-      const discount = round(discountAmount, 2);
-      const net = round((gross - discount) * taxMultiplier, 2);
-
-      return new OrderItemDto({
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-        deletedAt: entity.deletedAt,
-        orderItemNumber: entity.orderItemNumber,
-        orderNumber: entity.order.orderNumber,
-        status: entity.status,
-        prices: {
-          gross: entity.grossPrice,
-          discount: entity.discountAmount,
-          net,
-        },
-        taxes: taxDtos,
-      });
-    });
+    const orderItemDtos = resolveOrderItemDtos(entities);
 
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
     return new PageDto(orderItemDtos, pageMetaDto);
