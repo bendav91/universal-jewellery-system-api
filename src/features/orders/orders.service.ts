@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 import { Order } from '../../entities/orders/orders.entity';
 
 @Injectable()
-export class OrdersService {
+export class OrderService {
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
@@ -28,6 +28,8 @@ export class OrdersService {
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
+
+    console.log(entities);
 
     const orderDtos = resolveOrderDtos(entities);
 

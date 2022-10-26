@@ -21,7 +21,7 @@ import { OrderItemDto } from 'src/dtos/orders/order-item.dto';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { OrderItemsService } from './order-items.service';
-import { OrdersService } from './orders.service';
+import { OrderService } from './orders.service';
 import { Auth } from 'src/authorisation/auth.decorator';
 
 @Controller('order-items')
@@ -29,7 +29,7 @@ import { Auth } from 'src/authorisation/auth.decorator';
 export class OrderItemsController {
   constructor(
     private readonly orderItemService: OrderItemsService,
-    private readonly ordersService: OrdersService,
+    private readonly OrderService: OrderService,
   ) {}
 
   @Get()
@@ -50,7 +50,7 @@ export class OrderItemsController {
   async createOrderItem(
     @Body() createOrderItemDto: CreateOrderItemDto,
   ): Promise<OrderItemDto> {
-    const order = await this.ordersService.getOrderByOrderNumber(
+    const order = await this.OrderService.getOrderByOrderNumber(
       createOrderItemDto.orderNumber,
     );
 
