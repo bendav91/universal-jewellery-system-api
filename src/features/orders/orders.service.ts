@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateOrderDto } from 'src/dtos/orders/create-order.dto';
 import { OrderDto } from 'src/dtos/orders/order.dto';
@@ -15,6 +16,7 @@ export class OrderService {
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
+    private readonly configService: ConfigService,
   ) {}
 
   async getOrders(pageOptionsDto: PageOptionsDto): Promise<PageDto<OrderDto>> {
@@ -28,9 +30,6 @@ export class OrderService {
 
     const itemCount = await queryBuilder.getCount();
     const { entities } = await queryBuilder.getRawAndEntities();
-
-    console.log(entities);
-
     const orderDtos = resolveOrderDtos(entities);
 
     const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
@@ -38,8 +37,10 @@ export class OrderService {
   }
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<OrderDto> {
+    const ORDER_NUMBER_PREFIX = this.configService.get('ORDER_NUMBER_PREFIX');
+
     const newOrder = await this.ordersRepository.save({
-      orderNumber: generateOrderNumber(),
+      orderNumber: generateOrderNumber(ORDER_NUMBER_PREFIX),
       ...createOrderDto,
     });
 

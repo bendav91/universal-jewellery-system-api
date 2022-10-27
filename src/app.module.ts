@@ -11,12 +11,23 @@ import AuthConfig from './config/auth.config';
 import OrdersConfig from './config/orders.config';
 import TaxesConfig from './config/taxes.config';
 import WebhookConfig from './config/webhook.config';
+import SettingsConfig from './config/webhook.config';
+import PaymentGatewayConfig from './config/payment-gateway.config';
+import NgrokConfig from './config/ngrok.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [WebhookConfig, AuthConfig, OrdersConfig, TaxesConfig],
+      load: [
+        PaymentGatewayConfig,
+        WebhookConfig,
+        AuthConfig,
+        OrdersConfig,
+        TaxesConfig,
+        SettingsConfig,
+        NgrokConfig,
+      ],
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     OrdersModule,

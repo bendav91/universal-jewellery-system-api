@@ -7,8 +7,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import ngrok from 'ngrok';
 
 async function bootstrap() {
+  const port = 3000;
   const app = await NestFactory.create(AppModule);
   const configService = new ConfigService();
 
@@ -64,9 +66,18 @@ async function bootstrap() {
         },
       },
     });
+
+    const url = await ngrok.connect({
+      region: 'eu',
+      addr: port,
+      authtoken: configService.get('NGROK_AUTH_TOKEN'),
+      subdomain: configService.get('NGROK_SUBDOMAIN'),
+    });
+
+    logger.log(`Ngrok is running on: ${url}`);
   }
 
-  await app.listen(3000);
+  await app.listen(port);
 
   logger.log(`Application is running on: ${await app.getUrl()}`);
 }

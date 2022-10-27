@@ -7,4 +7,5 @@ export default () => ({
   AUTH0_OPEN_ID_URL: process.env.AUTH0_OPEN_ID_URL,
   AUTH0_REFRESH_URL: process.env.AUTH0_REFRESH_URL,
   AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
+  AUTH0_JWKS_URL: process.env.AUTH0_JWKS_URL,
 });
