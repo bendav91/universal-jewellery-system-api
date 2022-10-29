@@ -1,6 +1,7 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import fs from 'fs';
 import {
   ClassSerializerInterceptor,
   Logger,
@@ -29,7 +30,7 @@ async function bootstrap() {
     const config = new DocumentBuilder()
       .setTitle('Universal Jewellery System API')
       .setDescription('API for the Universal Jewellery System')
-      .setVersion('1.0')
+      .setVersion('0.0.1')
       .addOAuth2(
         {
           type: 'oauth2',
@@ -55,8 +56,14 @@ async function bootstrap() {
         'Auth0',
       )
       .build();
+
     const document = SwaggerModule.createDocument(app, config);
+    fs.writeFileSync(
+      './src/features/swagger-spec/swagger-spec.json',
+      JSON.stringify(document),
+    );
     SwaggerModule.setup('/', app, document, {
+      explorer: true,
       swaggerOptions: {
         persistAuthorization: true,
         initOAuth: {

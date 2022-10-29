@@ -8,6 +8,7 @@ import { AuthorisationModule } from './authorisation/authorisation.module';
 import { WebhookModule } from './features/webhook/webhook.module';
 import { UsersModule } from './features/users/users.module';
 import { PaymentsModule } from './features/payments/payments.module';
+import { SwaggerSpecModule } from './features/swagger-spec/swagger-spec.module';
 import AuthConfig from './config/auth.config';
 import OrdersConfig from './config/orders.config';
 import TaxesConfig from './config/taxes.config';
@@ -36,6 +37,7 @@ import NgrokConfig from './config/ngrok.config';
     WebhookModule,
     UsersModule,
     PaymentsModule,
+    SwaggerSpecModule,
   ],
   controllers: [],
   providers: [],
