@@ -17,6 +17,8 @@ import SettingsConfig from './config/webhook.config';
 import PaymentGatewayConfig from './config/payment-gateway.config';
 import NgrokConfig from './config/ngrok.config';
 
+console.log(process.env.NODE_ENV);
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -37,7 +39,7 @@ import NgrokConfig from './config/ngrok.config';
     WebhookModule,
     UsersModule,
     PaymentsModule,
-    SwaggerSpecModule,
+    ...(process.env.NODE_ENV !== 'production' ? [SwaggerSpecModule] : []),
   ],
   controllers: [],
   providers: [],
