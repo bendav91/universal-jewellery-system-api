@@ -10,6 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/authorisation/auth.decorator';
 import { ApiPaginatedResponse } from 'src/decorators/swagger/pagination/api-paginated-response.decorator';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
@@ -24,6 +25,7 @@ export class PaymentsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiPaginatedResponse(PaymentDto)
+  @Auth('read:payments')
   async getPayments(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<PaymentDto>> {
@@ -36,6 +38,7 @@ export class PaymentsController {
     new BadRequestException('Order number is required'),
     new NotFoundException('Order not found'),
   ])
+  @Auth('read:payments')
   async getPaymentsByOrderNumber(
     @Param('orderNumber') orderNumber: string,
   ): Promise<PaymentDto[]> {

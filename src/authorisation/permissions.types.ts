@@ -10,4 +10,13 @@ export type OrderItemPermissions =
   | 'update:orderitems'
   | 'delete:orderitems';
 
-export type ApiPermissions = OrderPermissions | OrderItemPermissions;
+export type PaymentPermissions =
+  | 'read:payments'
+  | 'create:payments'
+  | 'update:payments'
+  | 'delete:payments';
+
+export type ApiPermissions =
+  | OrderPermissions
+  | OrderItemPermissions
+  | PaymentPermissions;
