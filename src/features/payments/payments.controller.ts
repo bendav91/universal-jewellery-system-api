@@ -7,6 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  Post,
   Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -43,5 +44,13 @@ export class PaymentsController {
     @Param('orderNumber') orderNumber: string,
   ): Promise<PaymentDto[]> {
     return await this.paymentsService.getPaymentsByOrderNumber(orderNumber);
+  }
+
+  @Post('/:orderNumber')
+  @HttpCode(HttpStatus.OK)
+  @Auth('create:payments')
+  chargePayment() {
+    // TODO
+    return null;
   }
 }
