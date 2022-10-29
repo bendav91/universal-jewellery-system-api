@@ -1,5 +1,4 @@
 import { OrderDto } from 'src/dtos/orders/order.dto';
-import { UserDto } from 'src/dtos/users/user.dto';
 import { Order } from 'src/entities/orders/orders.entity';
 import { Prices } from 'src/interfaces/prices.interface';
 import { resolveUserDto } from '../users/resolve-user-dto';
