@@ -4,6 +4,7 @@ import { AbstractEntity } from '../abstract/abstract-entity';
 import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
 import { OrderItem } from './order-item.entity';
 import { User } from '../users/user.entity';
+import { Payment } from '../payments/payment.entity';
 
 @Entity()
 export class Order extends AbstractEntity implements Readonly<Order> {
@@ -38,6 +39,9 @@ export class Order extends AbstractEntity implements Readonly<Order> {
 
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   orderItems: OrderItem[];
+
+  @ManyToOne(() => Payment, (payment) => payment.order)
+  payments: Payment[];
 
   @ManyToOne(() => User, (user) => user.orders)
   user: User;
