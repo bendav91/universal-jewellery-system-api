@@ -8,7 +8,7 @@ export const resolvePaymentsDto = (
 ): { entries: PaymentDto[]; balance: number } => {
   let balance = startingBalance;
 
-  const entries = payments.map((payment) => {
+  const entries = payments?.map((payment) => {
     if (payment.paymentType === PaymentType.REFUND) {
       balance += payment.amount;
     } else {

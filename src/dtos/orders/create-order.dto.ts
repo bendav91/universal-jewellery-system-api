@@ -11,6 +11,13 @@ export class CreateOrderDto implements Readonly<CreateOrderDto> {
   public notes: string | null;
 
   @ApiProperty({
+    required: true,
+    default: 'auth0|73205c350b4ed9932f829afb2',
+  })
+  @MaxLength(80)
+  public userId: string | null;
+
+  @ApiProperty({
     default: '1 Barracuda Rise, Southam, Warwickshire, CV47 1AU',
   })
   @MaxLength(200)

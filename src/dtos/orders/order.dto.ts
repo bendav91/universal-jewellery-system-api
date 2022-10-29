@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderStatus } from 'src/constants/orders/order-status.enum';
 import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
-import { UserType } from 'src/constants/users/user-type.enum';
+import { Payments } from 'src/interfaces/payments.interface';
 import { Prices } from 'src/interfaces/prices.interface';
 import { AbstractDto } from '../abstract/abstract.dto';
 import { PaymentDto } from '../payments/payment.dto';
@@ -10,25 +10,29 @@ import { OrderItemDto } from './order-item.dto';
 
 export class OrderDto
   extends AbstractDto
-  implements Readonly<OrderDto>, Prices
+  implements Readonly<OrderDto>, Prices, Payments
 {
   @ApiProperty({
     enum: OrderStatus,
     default: OrderStatus.NEW,
   })
   public status: OrderStatus;
+
   @ApiProperty({
     enum: PaymentStatus,
     default: PaymentStatus.PAYMENT_PENDING,
   })
   public paymentStatus: PaymentStatus;
-  public orderNumber: string;
+
   @ApiProperty({
     nullable: true,
   })
   public notes: string | null;
+
+  public orderNumber: string;
   public shippingAddress: string;
   public orderItems: OrderItemDto[];
+  public user: UserDto;
 
   public prices: {
     gross: number;
@@ -36,7 +40,6 @@ export class OrderDto
     discount: number;
   };
 
-  public user: UserDto;
   public payments: {
     entries: PaymentDto[];
     balance: number;
