@@ -1,4 +1,5 @@
 export default () => ({
   STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
   STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  STRIPE_ACCOUNT_ID: process.env.STRIPE_ACCOUNT_ID,
 });

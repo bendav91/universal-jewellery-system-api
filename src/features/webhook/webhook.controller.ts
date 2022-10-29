@@ -7,6 +7,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
@@ -25,7 +26,11 @@ export class WebhookController {
 
   @Post('/auth/sync')
   @HttpCode(HttpStatus.OK)
-  @ApiException(() => [UnauthorizedException, BadRequestException])
+  @ApiException(() => [
+    UnauthorizedException,
+    BadRequestException,
+    new ServiceUnavailableException('Unable to create payment customer'),
+  ])
   @ApiHeader({
     name: 'x-api-key',
     required: true,

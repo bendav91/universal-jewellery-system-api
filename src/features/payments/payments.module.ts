@@ -4,10 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
 import { Order } from 'src/entities/orders/orders.entity';
+import { StripeFactory } from '../../factories/stripe/stripe.factory';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Payment, Order])],
-  providers: [PaymentsService],
+  providers: [PaymentsService, StripeFactory],
   controllers: [PaymentsController],
 })
 export class PaymentsModule {}

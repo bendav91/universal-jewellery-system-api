@@ -41,6 +41,11 @@ export class User implements Readonly<User> {
   @Column({ unique: true })
   public email: string;
 
+  @Column({
+    nullable: true,
+  })
+  public paymentGatewayCustomerId: string | null;
+
   @CreateDateColumn()
   public createdAt: Date;
 

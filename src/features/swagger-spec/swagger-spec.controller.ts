@@ -1,7 +1,9 @@
 import { Controller, Get, Header, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
 import fs from 'fs';
 
 @Controller('swagger-spec')
+@ApiExcludeController()
 export class SwaggerSpecController {
   @Get()
   @HttpCode(HttpStatus.OK)

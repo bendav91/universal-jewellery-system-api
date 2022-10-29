@@ -1,9 +1,9 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SortOrder } from 'src/constants/page/sort-order.enum';
 import { PageMetaDto } from 'src/dtos/page/page-meta.dto';
@@ -14,16 +14,21 @@ import { Order } from 'src/entities/orders/orders.entity';
 import { Payment } from 'src/entities/payments/payment.entity';
 import { resolvePaymentsDto } from 'src/utils/payments/resolve-payments-dto';
 import { Repository } from 'typeorm';
+import Stripe from 'stripe';
 
 @Injectable()
 export class PaymentsService {
+  private readonly stripeService: Stripe;
+
   constructor(
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
-    private readonly configService: ConfigService,
-  ) {}
+    @Inject('STRIPE_SERVICE') stripeService,
+  ) {
+    this.stripeService = stripeService;
+  }
 
   async getPayments(
     pageOptionsDto: PageOptionsDto,
