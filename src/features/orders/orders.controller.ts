@@ -20,7 +20,7 @@ import { Auth } from 'src/authorisation/auth.decorator';
 @Controller('orders')
 @ApiTags('Orders')
 export class OrdersController {
-  constructor(private readonly OrderService: OrderService) {}
+  constructor(private readonly orderService: OrderService) {}
 
   @Get()
   @Auth('read:orders')
@@ -29,13 +29,13 @@ export class OrdersController {
   async getOrders(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<OrderDto>> {
-    return await this.OrderService.getOrders(pageOptionsDto);
+    return await this.orderService.getOrders(pageOptionsDto);
   }
 
   @Post()
   @Auth('create:orders')
   @HttpCode(HttpStatus.CREATED)
   async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<OrderDto> {
-    return await this.OrderService.createOrder(createOrderDto);
+    return await this.orderService.createOrder(createOrderDto);
   }
 }

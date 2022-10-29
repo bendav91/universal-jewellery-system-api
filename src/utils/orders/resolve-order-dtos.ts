@@ -1,6 +1,6 @@
 import { OrderDto } from 'src/dtos/orders/order.dto';
 import { Order } from 'src/entities/orders/orders.entity';
-import { resolvePaymentsDto } from '../payments/resolve-payments-dtos';
+import { resolvePaymentsDto } from '../payments/resolve-payments-dto';
 import { resolveUserDto } from '../users/resolve-user-dto';
 import { resolveOrderItemDtos } from './resolve-order-item-dtos';
 import { resolveOrderPrices } from './resolve-order-prices';
