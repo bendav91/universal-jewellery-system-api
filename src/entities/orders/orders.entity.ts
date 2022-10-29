@@ -1,5 +1,12 @@
 import { OrderStatus } from '../../constants/orders/order-status.enum';
-import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 import { AbstractEntity } from '../abstract/abstract-entity';
 import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
 import { OrderItem } from './order-item.entity';
@@ -40,7 +47,8 @@ export class Order extends AbstractEntity implements Readonly<Order> {
   @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
   orderItems: OrderItem[];
 
-  @ManyToOne(() => Payment, (payment) => payment.order)
+  @ManyToMany(() => Payment)
+  @JoinTable()
   payments: Payment[];
 
   @ManyToOne(() => User, (user) => user.orders)

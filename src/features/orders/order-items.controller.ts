@@ -29,7 +29,7 @@ import { Auth } from 'src/authorisation/auth.decorator';
 export class OrderItemsController {
   constructor(
     private readonly orderItemService: OrderItemsService,
-    private readonly OrderService: OrderService,
+    private readonly orderService: OrderService,
   ) {}
 
   @Get()
@@ -50,7 +50,7 @@ export class OrderItemsController {
   async createOrderItem(
     @Body() createOrderItemDto: CreateOrderItemDto,
   ): Promise<OrderItemDto> {
-    const order = await this.OrderService.getOrderByOrderNumber(
+    const order = await this.orderService.getOrderByOrderNumber(
       createOrderItemDto.orderNumber,
     );
 

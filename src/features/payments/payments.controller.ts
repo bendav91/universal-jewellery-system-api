@@ -1,4 +1,14 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiPaginatedResponse } from 'src/decorators/swagger/pagination/api-paginated-response.decorator';
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
@@ -18,5 +28,17 @@ export class PaymentsController {
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<PaymentDto>> {
     return await this.paymentsService.getPayments(pageOptionsDto);
+  }
+
+  @Get('/:orderNumber')
+  @HttpCode(HttpStatus.OK)
+  @ApiException(() => [
+    new BadRequestException('Order number is required'),
+    new NotFoundException('Order not found'),
+  ])
+  async getPaymentsByOrderNumber(
+    @Param('orderNumber') orderNumber: string,
+  ): Promise<PaymentDto[]> {
+    return await this.paymentsService.getPaymentsByOrderNumber(orderNumber);
   }
 }

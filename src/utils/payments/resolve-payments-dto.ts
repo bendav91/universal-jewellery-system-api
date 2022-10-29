@@ -5,27 +5,29 @@ import { Payment } from 'src/entities/payments/payment.entity';
 export const resolvePaymentsDto = (
   payments: Payment[],
   startingBalance = 0,
-): { entries: PaymentDto[]; balance: number } => {
+): { entries: PaymentDto[] | null; balance: number } => {
   let balance = startingBalance;
 
-  const entries = payments?.map((payment) => {
-    if (payment.paymentType === PaymentType.REFUND) {
-      balance += payment.amount;
-    } else {
-      balance -= payment.amount;
-    }
+  const entries = payments?.length
+    ? payments.map((payment) => {
+        if (payment.paymentType === PaymentType.REFUND) {
+          balance += payment.amount;
+        } else {
+          balance -= payment.amount;
+        }
 
-    return new PaymentDto({
-      createdAt: payment.createdAt,
-      updatedAt: payment.updatedAt,
-      deletedAt: payment.deletedAt,
-      paymentId: payment.paymentId,
-      amount: payment.amount,
-      paymentType: payment.paymentType,
-      paymentProvider: payment.paymentProvider,
-      paymentProviderReference: payment.paymentProviderReference,
-    });
-  });
+        return new PaymentDto({
+          createdAt: payment.createdAt,
+          updatedAt: payment.updatedAt,
+          deletedAt: payment.deletedAt,
+          paymentId: payment.paymentId,
+          amount: payment.amount,
+          paymentType: payment.paymentType,
+          paymentProvider: payment.paymentProvider,
+          paymentProviderReference: payment.paymentProviderReference,
+        });
+      })
+    : null;
 
   return { entries, balance };
 };

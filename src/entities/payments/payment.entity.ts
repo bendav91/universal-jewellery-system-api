@@ -34,9 +34,6 @@ export class Payment extends AbstractEntity implements Readonly<Payment> {
   })
   public paymentProviderReference: string;
 
-  @OneToMany(() => Order, (order) => order.payments)
-  order: Order;
-
   @Column({
     type: 'decimal',
     precision: 10,
