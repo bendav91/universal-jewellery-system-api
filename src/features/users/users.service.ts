@@ -11,6 +11,7 @@ import { Auth0User } from 'src/interfaces/auth0-user.interface';
 import { determineUserType } from 'src/utils/users/determine-user-type';
 import { Repository } from 'typeorm';
 import { Stripe } from 'stripe';
+import { UserType } from 'src/constants/users/user-type.enum';
 
 @Injectable()
 export class UsersService {
@@ -38,8 +39,10 @@ export class UsersService {
       (existingUser && !existingUser?.paymentGatewayCustomerId) ||
       !existingUser;
 
+    let stripeCustomer: Stripe.Customer | undefined;
+
     if (userExistsAndNoPaymentIdOrNoUser) {
-      const stripeCustomer = await this.createStripeCustomerWithUser(auth0User);
+      stripeCustomer = await this.createStripeCustomerWithUser(auth0User);
       existingUser = {
         ...existingUser,
         paymentGatewayCustomerId: stripeCustomer.id,
