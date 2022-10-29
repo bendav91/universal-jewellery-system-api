@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Order } from '../orders/orders.entity';
 
 @Entity()
 export class User implements Readonly<User> {
@@ -30,6 +32,12 @@ export class User implements Readonly<User> {
   @Column({ type: 'timestamp' })
   public lastLogin: Date;
 
+  @Column({ default: 'No First Name' })
+  public firstName: string;
+
+  @Column({ default: 'No Last Name' })
+  public lastName: string;
+
   @Column({ unique: true })
   public email: string;
 
@@ -41,6 +49,9 @@ export class User implements Readonly<User> {
 
   @DeleteDateColumn()
   public deletedAt: Date;
+
+  @OneToMany(() => Order, (order) => order.user)
+  public orders: Order[];
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

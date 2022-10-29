@@ -25,6 +25,7 @@ export class OrderService {
       .orderBy('order.createdAt', pageOptionsDto.sortOrder)
       .leftJoinAndSelect('order.orderItems', 'orderItem')
       .leftJoinAndSelect('orderItem.taxes', 'taxes')
+      .leftJoinAndSelect('order.user', 'users')
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
