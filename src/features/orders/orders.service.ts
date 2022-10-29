@@ -26,6 +26,7 @@ export class OrderService {
       .leftJoinAndSelect('order.orderItems', 'orderItem')
       .leftJoinAndSelect('orderItem.taxes', 'taxes')
       .leftJoinAndSelect('order.user', 'users')
+      .leftJoinAndSelect('order.payments', 'payments')
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 

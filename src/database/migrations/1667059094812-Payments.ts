@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Payments1667057338044 implements MigrationInterface {
-    name = 'Payments1667057338044'
+export class Payments1667059094812 implements MigrationInterface {
+    name = 'Payments1667059094812'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."paymentTypeEnum" AS ENUM('Bank Transfer', 'Cash', 'Cheque', 'Credit Card', 'Debit Card', 'Online', 'Refund', 'Other')`);

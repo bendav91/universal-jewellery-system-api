@@ -1,6 +1,8 @@
 import { OrderDto } from 'src/dtos/orders/order.dto';
 import { Order } from 'src/entities/orders/orders.entity';
+import { User } from 'src/entities/users/user.entity';
 import { Prices } from 'src/interfaces/prices.interface';
+import { resolvePaymentsDto } from '../payments/resolve-payments-dtos';
 import { resolveUserDto } from '../users/resolve-user-dto';
 import { resolveOrderItemDtos } from './resolve-order-item-dtos';
 import { resolveOrderPrices } from './resolve-order-prices';
@@ -11,8 +13,13 @@ export const resolveOrderDtos = (orders: Order[]): OrderDto[] => {
       order.orderItems,
       order.orderNumber,
     );
-    const prices: Prices = resolveOrderPrices(orderItems);
+
+    const {
+      prices: { discount, gross, net },
+    } = resolveOrderPrices(orderItems);
+
     const user = resolveUserDto(order.user);
+    const { entries, balance } = resolvePaymentsDto(order.payments, net);
 
     return new OrderDto({
       createdAt: order.createdAt,
@@ -25,7 +32,15 @@ export const resolveOrderDtos = (orders: Order[]): OrderDto[] => {
       paymentStatus: order.paymentStatus,
       shippingAddress: order.shippingAddress,
       user,
-      ...prices,
+      payments: {
+        entries,
+        balance,
+      },
+      prices: {
+        discount,
+        gross,
+        net,
+      },
     });
   });
 };

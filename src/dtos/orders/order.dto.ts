@@ -4,6 +4,7 @@ import { PaymentStatus } from 'src/constants/orders/payment-status.enum';
 import { UserType } from 'src/constants/users/user-type.enum';
 import { Prices } from 'src/interfaces/prices.interface';
 import { AbstractDto } from '../abstract/abstract.dto';
+import { PaymentDto } from '../payments/payment.dto';
 import { UserDto } from '../users/user.dto';
 import { OrderItemDto } from './order-item.dto';
 
@@ -36,6 +37,10 @@ export class OrderDto
   };
 
   public user: UserDto;
+  public payments: {
+    entries: PaymentDto[];
+    balance: number;
+  };
 
   constructor({ createdAt, deletedAt, updatedAt, ...rest }: Partial<OrderDto>) {
     super({ createdAt, deletedAt, updatedAt });
