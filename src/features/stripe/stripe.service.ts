@@ -4,17 +4,21 @@ import {
   Inject,
   Injectable,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaymentType } from 'src/constants/payments/payment-type.enum';
+import { ChargePaymentDto } from 'src/dtos/payments/charge-payment.dto';
+import { Order } from 'src/entities/orders/orders.entity';
 import { Payment } from 'src/entities/payments/payment.entity';
+import { User } from 'src/entities/users/user.entity';
 import Stripe from 'stripe';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class StripeService {
-  private readonly client = Stripe;
+  private readonly client: Stripe;
   private readonly logger = new Logger('StripeService');
 
   constructor(
@@ -22,8 +26,68 @@ export class StripeService {
     private readonly configService: ConfigService,
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
+    @InjectRepository(Order)
+    private readonly ordersRepository: Repository<Order>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ) {
     this.client = client;
+  }
+
+  async createCheckoutSession(
+    chargePaymentDto: ChargePaymentDto,
+  ): Promise<Stripe.Checkout.Session> {
+    const user = await this.usersRepository.findOne({
+      where: { id: chargePaymentDto.userId },
+    });
+
+    const order = await this.ordersRepository.findOne({
+      where: { orderNumber: chargePaymentDto.orderNumber },
+    });
+
+    if (!order) throw new NotFoundException('Order not found');
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.paymentGatewayCustomerId)
+      throw new NotFoundException('No payment gateway id for user');
+
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+      chargePaymentDto.lineItems.map((lineItem) => {
+        const unit_amount_decimal = `${lineItem.amount * 100}`;
+
+        return {
+          quantity: lineItem.quantity,
+          price_data: {
+            currency: 'gbp',
+            unit_amount_decimal,
+            product_data: {
+              name: lineItem.productName,
+              metadata: {
+                productId: lineItem.productId,
+                orderNumber: chargePaymentDto.orderNumber,
+              },
+              description: lineItem.productDescription,
+            },
+          },
+        };
+      });
+
+    try {
+      const session = await this.client.checkout.sessions.create({
+        cancel_url: chargePaymentDto.cancelUrl,
+        success_url: chargePaymentDto.successUrl,
+        customer: user.paymentGatewayCustomerId,
+        line_items: lineItems,
+        client_reference_id: user.id,
+        mode: 'payment',
+        submit_type: 'pay',
+        payment_method_types: ['card'],
+        currency: 'gbp',
+      });
+      return session;
+    } catch (error) {
+      this.logger.error(error);
+      throw new BadRequestException('Error returned from payment provider');
+    }
   }
 
   async handleWebhookRequest(stripeSignature, request) {
@@ -31,7 +95,7 @@ export class StripeService {
     const secret = this.configService.get('STRIPE_WEBHOOK_SECRET');
 
     try {
-      event = (this.client as any).webhooks.constructEvent(
+      event = this.client.webhooks.constructEvent(
         request,
         stripeSignature,
         secret,

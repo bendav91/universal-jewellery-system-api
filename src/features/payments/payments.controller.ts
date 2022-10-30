@@ -18,12 +18,16 @@ import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { ChargePaymentDto } from 'src/dtos/payments/charge-payment.dto';
 import { PaymentDto } from 'src/dtos/payments/payment.dto';
+import { StripeService } from '../stripe/stripe.service';
 import { PaymentsService } from './payments.service';
 
 @Controller('payments')
 @ApiTags('Payments')
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(
+    private readonly paymentsService: PaymentsService,
+    private readonly stripeService: StripeService,
+  ) {}
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -80,7 +84,7 @@ export class PaymentsController {
   async chargePayment(
     @Body() chargePaymentDto: ChargePaymentDto,
   ): Promise<{ checkoutUrl: string }> {
-    const { url } = await this.paymentsService.createCheckoutSession(
+    const { url } = await this.stripeService.createCheckoutSession(
       chargePaymentDto,
     );
     return { checkoutUrl: url };
