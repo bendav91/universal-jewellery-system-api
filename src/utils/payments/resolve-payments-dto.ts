@@ -1,6 +1,7 @@
 import { PaymentType } from 'src/constants/payments/payment-type.enum';
 import { PaymentDto } from 'src/dtos/payments/payment.dto';
 import { Payment } from 'src/entities/payments/payment.entity';
+import { round } from '../misc/round';
 
 export const resolvePaymentsDto = (
   payments: Payment[],
@@ -28,5 +29,5 @@ export const resolvePaymentsDto = (
       })
     : null;
 
-  return { entries, balance };
+  return { entries, balance: round(balance, 2) };
 };
