@@ -11,6 +11,7 @@ import { Auth0User } from 'src/interfaces/auth0-user.interface';
 import { determineUserType } from 'src/utils/users/determine-user-type';
 import { Repository } from 'typeorm';
 import { Stripe } from 'stripe';
+import { Auth0UserDto } from 'src/dtos/auth/auth0-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,12 +27,12 @@ export class UsersService {
     this.stripeService = stripeService;
   }
 
-  async saveAuth0User(auth0User: Auth0User) {
+  async saveAuth0User(auth0User: Auth0UserDto) {
     const emailDomains = this.configService.get<string>('STAFF_EMAIL_DOMAINS');
-    const userType = determineUserType(auth0User.email, emailDomains);
+    const userType = determineUserType(auth0User.user.email, emailDomains);
 
     let existingUser = await this.usersRepository.findOne({
-      where: { id: auth0User.user_id },
+      where: { id: auth0User.user.user_id },
     });
 
     const userExistsAndNoPaymentIdOrNoUser =
@@ -41,14 +42,14 @@ export class UsersService {
     let stripeCustomer: Stripe.Customer | undefined;
 
     if (userExistsAndNoPaymentIdOrNoUser) {
-      stripeCustomer = await this.createStripeCustomerWithUser(auth0User);
+      stripeCustomer = await this.createStripeCustomerWithUser(auth0User.user);
       existingUser = {
         ...existingUser,
         paymentGatewayCustomerId: stripeCustomer.id,
       };
     } else {
       await this.updateStripeCustomerWithUser(
-        auth0User,
+        auth0User.user,
         existingUser.paymentGatewayCustomerId,
       );
     }
@@ -56,8 +57,8 @@ export class UsersService {
     const user = new User({
       ...existingUser,
       deletedAt: null,
-      email: auth0User.email,
-      id: auth0User.user_id,
+      email: auth0User.user.email,
+      id: auth0User.user.user_id,
       lastLogin: new Date(),
       provider: 'auth0',
       userType,

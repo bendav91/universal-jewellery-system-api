@@ -8,16 +8,13 @@ import {
   Post,
   RawBodyRequest,
   Req,
-  ServiceUnavailableException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiBody, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Auth0User } from 'src/interfaces/auth0-user.interface';
-import { mockAuth0User } from 'src/mocks/mock-auth0-user.mock';
 import { StripeService } from '../stripe/stripe.service';
 import { UsersService } from '../users/users.service';
 import { WebhookService } from './webhook.service';
+import { Auth0UserDto } from 'src/dtos/auth/auth0-user.dto';
 
 @Controller('webhook')
 @ApiTags('Webhooks')
@@ -39,22 +36,17 @@ export class WebhookController {
     },
   })
   @ApiBody({
-    schema: {
-      example: {
-        user: mockAuth0User,
-      },
-    },
+    type: Auth0UserDto,
   })
   async authSync(
     @Headers('x-api-key')
     reqApiKey: string,
-    @Body()
-    { user }: { user: Auth0User },
+    @Body() auth0User: Auth0UserDto,
   ) {
     const authorised = this.webhookService.verifyApiKey(reqApiKey);
 
-    if (authorised && user) {
-      await this.usersService.saveAuth0User(user);
+    if (authorised && auth0User) {
+      await this.usersService.saveAuth0User(auth0User);
     } else {
       throw new BadRequestException('Bad Request');
     }

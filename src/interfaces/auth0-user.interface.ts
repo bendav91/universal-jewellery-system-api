@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
+
+export interface Auth0Request {
+  user: Auth0User;
+}
 export interface Auth0User {
   _id: string;
   clientID: string;
@@ -23,6 +27,6 @@ export interface Auth0Identity {
   isSocial: boolean;
 }
 
-interface Persistent {}
+export interface Persistent {}
 
-interface AppMetadata {}
+export interface AppMetadata {}
