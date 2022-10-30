@@ -17,6 +17,7 @@ import { ApiPaginatedResponse } from 'src/decorators/swagger/pagination/api-pagi
 import { PageOptionsDto } from 'src/dtos/page/page-options.dto';
 import { PageDto } from 'src/dtos/page/page.dto';
 import { ChargePaymentDto } from 'src/dtos/payments/charge-payment.dto';
+import { CheckoutLinkDto } from 'src/dtos/payments/checkout-link.dto';
 import { PaymentDto } from 'src/dtos/payments/payment.dto';
 import { StripeService } from '../stripe/stripe.service';
 import { PaymentsService } from './payments.service';
@@ -83,10 +84,10 @@ export class PaymentsController {
   ])
   async chargePayment(
     @Body() chargePaymentDto: ChargePaymentDto,
-  ): Promise<{ checkoutUrl: string }> {
-    const { url } = await this.stripeService.createCheckoutSession(
+  ): Promise<CheckoutLinkDto> {
+    const { url: checkoutUrl } = await this.stripeService.createCheckoutSession(
       chargePaymentDto,
     );
-    return { checkoutUrl: url };
+    return new CheckoutLinkDto({ checkoutUrl });
   }
 }
