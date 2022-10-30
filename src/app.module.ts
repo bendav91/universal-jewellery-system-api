@@ -9,6 +9,7 @@ import { WebhookModule } from './features/webhook/webhook.module';
 import { UsersModule } from './features/users/users.module';
 import { PaymentsModule } from './features/payments/payments.module';
 import { SwaggerSpecModule } from './features/swagger-spec/swagger-spec.module';
+import { StripeModule } from './features/stripe/stripe.module';
 import AuthConfig from './config/auth.config';
 import OrdersConfig from './config/orders.config';
 import TaxesConfig from './config/taxes.config';
@@ -37,6 +38,7 @@ import NgrokConfig from './config/ngrok.config';
     UsersModule,
     PaymentsModule,
     ...(process.env.NODE_ENV !== 'production' ? [SwaggerSpecModule] : []),
+    StripeModule,
   ],
   controllers: [],
   providers: [],

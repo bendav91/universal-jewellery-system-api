@@ -7,12 +7,16 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  RawBodyRequest,
+  Req,
   ServiceUnavailableException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
+import { ApiBody, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Auth0User } from 'src/interfaces/auth0-user.interface';
 import { mockAuth0User } from 'src/mocks/mock-auth0-user.mock';
+import { StripeService } from '../stripe/stripe.service';
 import { UsersService } from '../users/users.service';
 import { WebhookService } from './webhook.service';
 
@@ -22,6 +26,7 @@ export class WebhookController {
   constructor(
     private readonly webhookService: WebhookService,
     private readonly usersService: UsersService,
+    private stripeService: StripeService,
   ) {}
 
   @Post('/auth/sync')
@@ -59,5 +64,19 @@ export class WebhookController {
     } else {
       throw new BadRequestException('Bad Request');
     }
+  }
+
+  @Post('/payment/stripe')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description:
+      'Successfully recieved a webhook event sent via POST from Stripe',
+  })
+  async paymentStripe(@Req() request: RawBodyRequest<Request>) {
+    const stripeSignature = request.headers['stripe-signature'];
+    await this.stripeService.handleWebhookRequest(
+      stripeSignature,
+      request.rawBody,
+    );
   }
 }

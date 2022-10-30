@@ -12,7 +12,9 @@ import ngrok from 'ngrok';
 
 async function bootstrap() {
   const port = 3000;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  });
   const configService = new ConfigService();
 
   const logger = new Logger(AppModule.name);

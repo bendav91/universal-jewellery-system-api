@@ -1,18 +1,13 @@
 import { PaymentType } from 'src/constants/payments/payment-type.enum';
 import { ColumnDecimalTransformer } from 'src/transformers/columnDecimalTransformer.transformer';
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { AbstractEntity } from '../abstract/abstract-entity';
-import { Order } from '../orders/orders.entity';
 
 @Entity()
 export class Payment extends AbstractEntity implements Readonly<Payment> {
-  @PrimaryColumn({
-    type: 'uuid',
-  })
-  public paymentId: string;
-
   @Column({
     type: 'uuid',
+    generated: 'uuid',
   })
   public idempotencyKey: string;
 

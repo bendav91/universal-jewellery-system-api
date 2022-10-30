@@ -20,7 +20,6 @@ export const resolvePaymentsDto = (
           createdAt: payment.createdAt,
           updatedAt: payment.updatedAt,
           deletedAt: payment.deletedAt,
-          paymentId: payment.paymentId,
           amount: payment.amount,
           paymentType: payment.paymentType,
           paymentProvider: payment.paymentProvider,

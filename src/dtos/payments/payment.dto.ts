@@ -3,7 +3,6 @@ import { PaymentType } from 'src/constants/payments/payment-type.enum';
 import { AbstractDto } from '../abstract/abstract.dto';
 
 export class PaymentDto extends AbstractDto implements Readonly<PaymentDto> {
-  public paymentId: string;
   public amount: number;
   public paymentType: PaymentType;
   @ApiProperty({ nullable: true })
