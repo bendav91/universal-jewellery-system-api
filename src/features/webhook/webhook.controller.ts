@@ -41,7 +41,10 @@ export class WebhookController {
   })
   @ApiBody({
     schema: {
-      default: { user: mockAuth0User },
+      type: 'object',
+      example: {
+        user: mockAuth0User,
+      },
     },
   })
   async authSync(
