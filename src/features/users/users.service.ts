@@ -46,6 +46,11 @@ export class UsersService {
         ...existingUser,
         paymentGatewayCustomerId: stripeCustomer.id,
       };
+    } else {
+      await this.updateStripeCustomerWithUser(
+        auth0User,
+        existingUser.paymentGatewayCustomerId,
+      );
     }
 
     const user = new User({
@@ -62,14 +67,14 @@ export class UsersService {
   }
 
   private async createStripeCustomerWithUser(
-    user: Auth0User,
+    auth0user: Auth0User,
   ): Promise<Stripe.Customer> {
     try {
       const stripeCustomer = await this.stripeService.customers.create({
-        email: user.email,
-        name: user.name,
+        email: auth0user.email,
+        name: auth0user.name,
         metadata: {
-          userId: user.user_id,
+          userId: auth0user.user_id,
         },
       });
       return stripeCustomer;
@@ -77,6 +82,30 @@ export class UsersService {
       this.logger.error(error);
       throw new ServiceUnavailableException(
         'Unable to create payment customer',
+      );
+    }
+  }
+
+  private async updateStripeCustomerWithUser(
+    auth0user: Auth0User,
+    paymentCustomerId: string,
+  ): Promise<Stripe.Customer> {
+    try {
+      const stripeCustomer = await this.stripeService.customers.update(
+        paymentCustomerId,
+        {
+          email: auth0user.email,
+          name: auth0user.name,
+          metadata: {
+            userId: auth0user.user_id,
+          },
+        },
+      );
+      return stripeCustomer;
+    } catch (error) {
+      this.logger.error(error);
+      throw new ServiceUnavailableException(
+        'Unable to update payment customer',
       );
     }
   }
