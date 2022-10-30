@@ -1,4 +1,3 @@
-import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 import {
   BadRequestException,
   Body,
@@ -42,10 +41,6 @@ export class PaymentsController {
 
   @Get('/:orderNumber')
   @HttpCode(HttpStatus.OK)
-  @ApiException(() => [
-    new BadRequestException('Order number is required'),
-    new NotFoundException('Order not found'),
-  ])
   @Auth('read:payments')
   async getPaymentsByOrderNumber(
     @Param('orderNumber') orderNumber: string,
@@ -76,12 +71,6 @@ export class PaymentsController {
       },
     },
   })
-  @ApiException(() => [
-    new NotFoundException('Order not found'),
-    new NotFoundException('User not found'),
-    new NotFoundException('No payment gateway id for user'),
-    new BadRequestException('Error returned from payment provider'),
-  ])
   async chargePayment(
     @Body() chargePaymentDto: ChargePaymentDto,
   ): Promise<CheckoutLinkDto> {

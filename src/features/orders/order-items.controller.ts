@@ -1,4 +1,3 @@
-import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 import {
   Body,
   Controller,
@@ -46,7 +45,6 @@ export class OrderItemsController {
   @Post()
   @Auth('create:orderitems')
   @HttpCode(HttpStatus.ACCEPTED)
-  @ApiException(() => [new NotFoundException('Order not found')])
   async createOrderItem(
     @Body() createOrderItemDto: CreateOrderItemDto,
   ): Promise<OrderItemDto> {

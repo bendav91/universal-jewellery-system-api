@@ -1,4 +1,3 @@
-import { ApiException } from '@nanogiants/nestjs-swagger-api-exception-decorator';
 import {
   BadRequestException,
   Body,
@@ -31,11 +30,6 @@ export class WebhookController {
 
   @Post('/auth/sync')
   @HttpCode(HttpStatus.OK)
-  @ApiException(() => [
-    UnauthorizedException,
-    BadRequestException,
-    new ServiceUnavailableException('Unable to create payment customer'),
-  ])
   @ApiHeader({
     name: 'x-api-key',
     required: true,
