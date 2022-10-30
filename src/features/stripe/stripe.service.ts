@@ -165,7 +165,7 @@ export class StripeService {
         paymentProviderReference: checkoutSession.id,
         paymentProvider: 'stripe',
       });
-      return await this.paymentRepository.save(payment);
+      await this.paymentRepository.save(payment);
     } catch (error) {
       this.logger.error(`Error creating new payment: ${error.message}`);
     }
@@ -173,6 +173,8 @@ export class StripeService {
     try {
       order = await this.ordersRepository.findOne({
         where: { orderNumber },
+        relationLoadStrategy: 'join',
+        loadEagerRelations: true,
       });
     } catch {
       this.logger.error(
@@ -182,9 +184,10 @@ export class StripeService {
     }
 
     try {
-      this.ordersRepository.save({
+      const payments = order?.payments ?? [];
+      await this.ordersRepository.save({
         ...order,
-        payments: [...order.payments, payment],
+        payments: [...payments, payment],
       });
     } catch (error) {
       this.logger.error(
