@@ -75,6 +75,11 @@ export class PaymentsService {
       where: { id: chargePaymentDto.userId },
     });
 
+    const order = await this.ordersRepository.findOne({
+      where: { orderNumber: chargePaymentDto.orderNumber },
+    });
+
+    if (!order) throw new NotFoundException('Order not found');
     if (!user) throw new NotFoundException('User not found');
     if (!user.paymentGatewayCustomerId)
       throw new NotFoundException('No payment gateway id for user');
@@ -92,6 +97,7 @@ export class PaymentsService {
               name: lineItem.productName,
               metadata: {
                 productId: lineItem.productId,
+                orderNumber: chargePaymentDto.orderNumber,
               },
               description: lineItem.productDescription,
             },
@@ -100,7 +106,7 @@ export class PaymentsService {
       });
 
     try {
-      return await this.stripeService.checkout.sessions.create({
+      const session = await this.stripeService.checkout.sessions.create({
         cancel_url: chargePaymentDto.cancelUrl,
         success_url: chargePaymentDto.successUrl,
         customer: user.paymentGatewayCustomerId,
@@ -110,10 +116,8 @@ export class PaymentsService {
         submit_type: 'pay',
         payment_method_types: ['card'],
         currency: 'gbp',
-        metadata: {
-          orderNumber: chargePaymentDto.orderNumber,
-        },
       });
+      return session;
     } catch (error) {
       this.logger.error(error);
       throw new BadRequestException('Error returned from payment provider');

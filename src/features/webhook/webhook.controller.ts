@@ -41,7 +41,6 @@ export class WebhookController {
   })
   @ApiBody({
     schema: {
-      type: 'object',
       example: {
         user: mockAuth0User,
       },

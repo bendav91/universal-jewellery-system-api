@@ -52,11 +52,13 @@ export class PaymentsController {
   @HttpCode(HttpStatus.OK)
   @Auth('create:payments')
   @ApiBody({
+    type: ChargePaymentDto,
     schema: {
       example: {
         userId: 'auth0|73205c350b4ed9932f829afb2',
         cancelUrl: 'http://localhost:3000/',
         successUrl: 'http://localhost:3000/',
+        orderNumber: 'UJ-7A921E567F',
         lineItems: [
           {
             productName: 'Test Product',
@@ -70,11 +72,17 @@ export class PaymentsController {
     },
   })
   @ApiException(() => [
+    new NotFoundException('Order not found'),
     new NotFoundException('User not found'),
     new NotFoundException('No payment gateway id for user'),
     new BadRequestException('Error returned from payment provider'),
   ])
-  async chargePayment(@Body() chargePaymentDto: ChargePaymentDto) {
-    return await this.paymentsService.createCheckoutSession(chargePaymentDto);
+  async chargePayment(
+    @Body() chargePaymentDto: ChargePaymentDto,
+  ): Promise<{ checkoutUrl: string }> {
+    const { url } = await this.paymentsService.createCheckoutSession(
+      chargePaymentDto,
+    );
+    return { checkoutUrl: url };
   }
 }
