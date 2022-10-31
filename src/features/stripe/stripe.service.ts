@@ -4,10 +4,12 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaymentType } from 'src/constants/payments/payment-type.enum';
+import { Auth0UserRequestDto } from 'src/dtos/auth/auth0-user.dto';
 import { ChargePaymentDto } from 'src/dtos/payments/charge-payment.dto';
 import { Order } from 'src/entities/orders/orders.entity';
 import { Payment } from 'src/entities/payments/payment.entity';
@@ -192,6 +194,50 @@ export class StripeService {
     } catch (error) {
       this.logger.error(
         `Error saving new payment against order: ${error.message}`,
+      );
+    }
+  }
+
+  async createStripeCustomerWithUser(
+    auth0user: Auth0UserRequestDto,
+  ): Promise<Stripe.Customer> {
+    try {
+      const stripeCustomer = await this.client.customers.create({
+        email: auth0user.user.email,
+        name: auth0user.user.name,
+        metadata: {
+          userId: auth0user.user.user_id,
+        },
+      });
+      return stripeCustomer;
+    } catch (error) {
+      this.logger.error(error);
+      throw new ServiceUnavailableException(
+        'Unable to create payment customer',
+      );
+    }
+  }
+
+  async updateStripeCustomerWithUser(
+    auth0user: Auth0UserRequestDto,
+    paymentCustomerId: string,
+  ): Promise<Stripe.Customer> {
+    try {
+      const stripeCustomer = await this.client.customers.update(
+        paymentCustomerId,
+        {
+          email: auth0user.user.email,
+          name: auth0user.user.name,
+          metadata: {
+            userId: auth0user.user.user_id,
+          },
+        },
+      );
+      return stripeCustomer;
+    } catch (error) {
+      this.logger.error(error);
+      throw new ServiceUnavailableException(
+        'Unable to update payment customer',
       );
     }
   }

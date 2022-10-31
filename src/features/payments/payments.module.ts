@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentsService } from './payments.service';
 import { PaymentsController } from './payments.controller';
 import { Order } from 'src/entities/orders/orders.entity';
-import { StripeFactory } from '../../factories/stripe/stripe.factory';
+import { StripeFactory } from '../stripe/stripe.factory';
 import { User } from 'src/entities/users/user.entity';
 import { StripeModule } from '../stripe/stripe.module';
 

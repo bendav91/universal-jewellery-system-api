@@ -14,7 +14,7 @@ import { ApiBody, ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { StripeService } from '../stripe/stripe.service';
 import { UsersService } from '../users/users.service';
 import { WebhookService } from './webhook.service';
-import { Auth0UserDto } from 'src/dtos/auth/auth0-user.dto';
+import { Auth0UserRequestDto } from 'src/dtos/auth/auth0-user.dto';
 
 @Controller('webhook')
 @ApiTags('Webhooks')
@@ -36,12 +36,12 @@ export class WebhookController {
     },
   })
   @ApiBody({
-    type: Auth0UserDto,
+    type: Auth0UserRequestDto,
   })
   async authSync(
     @Headers('x-api-key')
     reqApiKey: string,
-    @Body() auth0User: Auth0UserDto,
+    @Body() auth0User: Auth0UserRequestDto,
   ) {
     const authorised = this.webhookService.verifyApiKey(reqApiKey);
 
