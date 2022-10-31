@@ -24,7 +24,11 @@
     "migration:generate": "bash ./generate-migration.sh",
     "migration:create": "bash ./create-migration.sh",
     "migration:run": "yarn run typeorm:cli -d src/config/typeorm.config-migrations.ts migration:run",
-    "migration:revert": "yarn run typeorm:cli -d src/config/typeorm.config-migrations.ts migration:revert"
+    "migration:revert": "yarn run typeorm:cli -d src/config/typeorm.config-migrations.ts migration:revert",
+    "docker:login": "docker login registry.digitalocean.com",
+    "docker:build": "docker build -t registry.digitalocean.com/universal-jewellery-container-registry/universal-jewellery-api .",
+    "docker:run": "docker run -p 3000:3000 registry.digitalocean.com/universal-jewellery-container-registry/universal-jewellery-api",
+    "docker:push": "docker push registry.digitalocean.com/universal-jewellery-container-registry/universal-jewellery-api"
   },
   "dependencies": {
     "@casl/ability": "^6.3.1",
