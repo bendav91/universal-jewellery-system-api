@@ -44,4 +44,4 @@ lerna-debug.log*
 swagger-spec.json
 
 # k8s
-universal-jewllery-api-k8s-kubeconfig.yaml
+.kube/*.yaml

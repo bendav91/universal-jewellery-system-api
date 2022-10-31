@@ -9,7 +9,7 @@
 
 ### K8S
 
-***Prerequisite**: First, download the cluster configuration file from Digital Ocean and add to root of project (it should be git ignored and not commited)
+***Prerequisite**: First, download the cluster configuration file from Digital Ocean and add to .kube folder (it should be git ignored and not commited)
 
 #### Get Nodes
 
